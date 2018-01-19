@@ -16,9 +16,9 @@ import java.nio.charset.Charset;
  */
 public class MinaCodeFactory implements ProtocolCodecFactory {
     private final MinaEncoder encoder;
-    private final MinaDecoder decoder;
+    private final TextLineDecoder decoder;
 
-    MinaCodeFactory(){
+    public MinaCodeFactory() {
         this.encoder = new MinaEncoder();
         this.decoder = new MinaDecoder();
     }

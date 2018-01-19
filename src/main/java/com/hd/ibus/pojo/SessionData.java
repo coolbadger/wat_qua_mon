@@ -1,6 +1,8 @@
 package com.hd.ibus.pojo;
 
-import org.apache.mina.core.session.IoSession;
+import com.hd.ibus.socketserver.Sensor;
+
+import java.util.Date;
 
 /**
  * 设备session信息
@@ -19,6 +21,8 @@ public class SessionData {
     private String DEBUGMODE;
 
     private String DTUFILTER;
+
+    private Date lastActiveDate;    //最近一次活动时间
 
     public String getDSCADDR() {
         return DSCADDR;
@@ -67,4 +71,13 @@ public class SessionData {
     public void setDTUFILTER(String DTUFILTER) {
         this.DTUFILTER = DTUFILTER;
     }
+
+    public Date getLastActiveDate() {
+        return lastActiveDate;
+    }
+
+    public void setLastActiveDate(Date lastActiveDate) {
+        this.lastActiveDate = lastActiveDate;
+    }
+
 }

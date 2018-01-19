@@ -18,7 +18,7 @@
           class="org.apache.mina.transport.socket.nio.NioSocketAcceptor"
           init-method="bind" destroy-method="unbind">
 
-        <property name="defaultLocalAddress" value=":8088" />
+        <property name="defaultLocalAddress" value=":10088" />
         <property name="handler" ref="minaIOHandler" />
         <property name="filterChainBuilder" ref="filterChainBuilder" />
         <property name="reuseAddress" value="true" />
@@ -40,11 +40,11 @@
     <bean id="codecFilter"
           class="org.apache.mina.filter.codec.ProtocolCodecFilter">
         <constructor-arg>
-            <bean id="codecFactory" class="org.apache.mina.filter.codec.textline.TextLineCodecFactory">
-                <constructor-arg ref="gbkCharset" />
-            </bean>
+            <!--<bean id="codecFactory" class="org.apache.mina.filter.codec.textline.TextLineCodecFactory">-->
+                <!--<constructor-arg ref="gbkCharset" />-->
+            <!--</bean>-->
 
-            <!--<bean id="codecFactory" class="com.hd.ibus.socketserver.MinaCodeFactory"></bean>-->
+            <bean id="codecFactory" class="com.hd.ibus.socketserver.MinaCodeFactory"></bean>
 
         </constructor-arg>
     </bean>

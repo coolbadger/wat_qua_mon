@@ -1,6 +1,6 @@
 package com.hd.ibus.socketserver;
 
-public class SensorPojo {
+public class SensorPojo implements Cloneable {
 
     private double valuePH;
     private double valueDO;
@@ -84,4 +84,16 @@ public class SensorPojo {
             this.valueTEMP = -1;
     }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        return "SensorPojo:" + getValuePH() + "  " + getValueDO() + "  "
+                + getValueCOND() + "  " + getValueNTU() + "  "
+                + getValueNH4() + "  " + getValueTEMP();
+
+        }
 }

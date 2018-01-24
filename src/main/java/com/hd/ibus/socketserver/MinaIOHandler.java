@@ -69,67 +69,78 @@ public class MinaIOHandler extends IoHandlerAdapter {
 
         System.out.println("接收[sessionId = " + session.getId() + "]" + message.toString());
 
-        //正则表达式 截取RECEIVED中参数头
-        String str = message.toString();
-        System.out.println(str);
-        String regEx = "\\+.*?:";
-        String switchStr = "";
-        Pattern pattern = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(str);
-        if (matcher.find()) {
-            switchStr = matcher.group(0).toString();
+        //传感器数据
+        if(message instanceof SensorPojo){
+            GlobalSessionData.setSensorPojo((SensorPojo) message);
         }
-
-        Map<Long, SessionData> sessionDataMap = GlobalSessionData.getSessionDataMap();
-        Map<String, IoSession> sessionMap = GlobalSessionData.getSessionMap();
-
-        //获取当前的session对应的终端信息
-        SessionData sessionData = sessionDataMap.get(session.getId());
-        //如果存在则update 不存在则new
-        if (sessionData != null) {
-            if (switchStr.equals("+DTUID:")) {
-                sessionData.setDTUID(message.toString().substring(message.toString().indexOf("+DTUID:") + 7));
-            } else if (switchStr.equals("+DSCADDR:")) {
-                sessionData.setDSCADDR(message.toString().substring(message.toString().indexOf("+DSCADDR:") + 9));
-            } else if (switchStr.equals("+KEEPALIVE:")) {
-                sessionData.setKEEPALIVE(message.toString().substring(message.toString().indexOf("+KEEPALIVE:") + 11));
-            } else if (switchStr.equals("+UARTCFG:")) {
-                sessionData.setUARTCFG(message.toString().substring(message.toString().indexOf("+UARTCFG:") + 9));
-            } else if (switchStr.equals("+DEBUGMODE:")) {
-                sessionData.setDEBUGMODE(message.toString().substring(message.toString().indexOf("+DEBUGMODE:") + 11));
-            } else if (switchStr.equals("+DTUFILTER:")) {
-                sessionData.setDTUFILTER(message.toString().substring(message.toString().indexOf("+DTUFILTER:") + 11));
+        //指令
+        else if(message instanceof String){
+            //正则表达式 截取RECEIVED中参数头
+            String str = message.toString();
+            System.out.println(str);
+            String regEx = "\\+.*?:";
+            String switchStr = "";
+            Pattern pattern = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(str);
+            if (matcher.find()) {
+                switchStr = matcher.group(0).toString();
             }
-        } else {
-            sessionData = new SessionData();
-            if (switchStr.equals("+DTUID:")) {
-                sessionData.setDTUID(message.toString().substring(message.toString().indexOf("+DTUID:") + 7));
-            } else if (switchStr.equals("+DSCADDR:")) {
-                sessionData.setDSCADDR(message.toString().substring(message.toString().indexOf("+DSCADDR:") + 1));
-            } else if (switchStr.equals("+KEEPALIVE:")) {
-                sessionData.setKEEPALIVE(message.toString().substring(message.toString().indexOf("+KEEPALIVE:") + 1));
-            } else if (switchStr.equals("+UARTCFG:")) {
-                sessionData.setUARTCFG(message.toString().substring(message.toString().indexOf("+UARTCFG:") + 9));
-            } else if (switchStr.equals("+DEBUGMODE:")) {
-                sessionData.setDEBUGMODE(message.toString().substring(message.toString().indexOf("+DEBUGMODE:") + 11));
-            } else if (switchStr.equals("+DTUFILTER:")) {
-                sessionData.setDTUFILTER(message.toString().substring(message.toString().indexOf("+DTUFILTER:") + 11));
+
+            Map<Long, SessionData> sessionDataMap = GlobalSessionData.getSessionDataMap();
+            Map<String, IoSession> sessionMap = GlobalSessionData.getSessionMap();
+
+            //获取当前的session对应的终端信息
+            SessionData sessionData = sessionDataMap.get(session.getId());
+            //如果存在则update 不存在则new
+            if (sessionData != null) {
+                if (switchStr.equals("+DTUID:")) {
+                    sessionData.setDTUID(message.toString().substring(message.toString().indexOf("+DTUID:") + 7));
+                } else if (switchStr.equals("+DSCADDR:")) {
+                    sessionData.setDSCADDR(message.toString().substring(message.toString().indexOf("+DSCADDR:") + 9));
+                } else if (switchStr.equals("+KEEPALIVE:")) {
+                    sessionData.setKEEPALIVE(message.toString().substring(message.toString().indexOf("+KEEPALIVE:") + 11));
+                } else if (switchStr.equals("+UARTCFG:")) {
+                    sessionData.setUARTCFG(message.toString().substring(message.toString().indexOf("+UARTCFG:") + 9));
+                } else if (switchStr.equals("+DEBUGMODE:")) {
+                    sessionData.setDEBUGMODE(message.toString().substring(message.toString().indexOf("+DEBUGMODE:") + 11));
+                } else if (switchStr.equals("+DTUFILTER:")) {
+                    sessionData.setDTUFILTER(message.toString().substring(message.toString().indexOf("+DTUFILTER:") + 11));
+                }
+            } else {
+                sessionData = new SessionData();
+                if (switchStr.equals("+DTUID:")) {
+                    sessionData.setDTUID(message.toString().substring(message.toString().indexOf("+DTUID:") + 7));
+                } else if (switchStr.equals("+DSCADDR:")) {
+                    sessionData.setDSCADDR(message.toString().substring(message.toString().indexOf("+DSCADDR:") + 1));
+                } else if (switchStr.equals("+KEEPALIVE:")) {
+                    sessionData.setKEEPALIVE(message.toString().substring(message.toString().indexOf("+KEEPALIVE:") + 1));
+                } else if (switchStr.equals("+UARTCFG:")) {
+                    sessionData.setUARTCFG(message.toString().substring(message.toString().indexOf("+UARTCFG:") + 9));
+                } else if (switchStr.equals("+DEBUGMODE:")) {
+                    sessionData.setDEBUGMODE(message.toString().substring(message.toString().indexOf("+DEBUGMODE:") + 11));
+                } else if (switchStr.equals("+DTUFILTER:")) {
+                    sessionData.setDTUFILTER(message.toString().substring(message.toString().indexOf("+DTUFILTER:") + 11));
+                }
             }
+
+            GlobalSessionData.putSessionData(session.getId(), sessionData);
+
+            //putSessionMap
+            String dtuId = sessionDataMap.get(session.getId()).getDTUID();
+            if (dtuId != null && !"".equals(dtuId)) {
+                dtuId = dtuId.trim();
+                GlobalSessionData.putSession(dtuId, session);
+                System.out.println(dtuId);
+                System.out.println(GlobalSessionData.getSessionMap().size());
+            }
+
+        }
+        else {
+
         }
 
-        GlobalSessionData.putSessionData(session.getId(), sessionData);
-
-        //putSessionMap
-        String dtuId = sessionDataMap.get(session.getId()).getDTUID();
-        if (dtuId != null && !"".equals(dtuId)) {
-            dtuId = dtuId.trim();
-            GlobalSessionData.putSession(dtuId, session);
-            System.out.println(dtuId);
-            System.out.println(GlobalSessionData.getSessionMap().size());
-        }
 
 
-        System.out.println(message.toString());
 
     }
 

@@ -22,7 +22,9 @@ public class MinaDecoder extends TextLineDecoder {
 
         byte[] data = ioBufferToByte(in);
         in.flip();
+
         SensorPojo sensorPojo;
+
 
         String hex = bytesToHexString(data);
 
@@ -31,6 +33,7 @@ public class MinaDecoder extends TextLineDecoder {
         if (hex.length() < 50 && hex.startsWith("01040C02")) {
             try {
                 sensorPojo = new SensorPojo(data);
+                out.write(sensorPojo);
             } catch (Exception e) {
 
             }
